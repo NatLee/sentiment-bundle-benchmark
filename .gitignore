@@ -1,0 +1,19 @@
+# Datasets and model weights are downloaded, never committed
+data/
+models/
+.cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+build/
+dist/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+desktop.ini
