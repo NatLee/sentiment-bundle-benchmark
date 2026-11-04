@@ -9,6 +9,8 @@ import statistics
 from dataclasses import dataclass
 from pathlib import Path
 
+import numpy as np
+
 from .config import BenchmarkConfig
 from .datasets import get_spec
 
@@ -23,6 +25,7 @@ THEMES = {
     "dark": {"surface": "#1a1a19", "ink": "#f0efec", "ink2": "#c3c2b7", "muted": "#898781",
              "grid": "#2c2c2a", "axis": "#383835", "accent": "#3987e5", "context": "#898781"},
 }
+HEATMAP_LOW_PERCENTILE = 10
 BLUE_RAMP = ["#cde2fb", "#b7d3f6", "#9ec5f4", "#86b6ef", "#6da7ec", "#5598e7", "#3987e5",
              "#2a78d6", "#256abf", "#1c5cab", "#184f95", "#104281", "#0d366b"]
 
@@ -224,10 +227,13 @@ def chart_heatmap(results: Results, path: Path, theme: dict) -> None:
     values = [[(r["metrics"]["macro_f1"] if (r := results.get(m, d)) else float("nan")) for d in results.datasets]
               for m in results.methods]
     flat = [v for row in values for v in row if v == v]
+    # One failed run (e.g. a zero-shot score near chance) would wash every other cell into the same
+    # dark blue, so the colour scale starts at a low percentile and anything below it gets the lightest step.
+    low, high = float(np.percentile(flat, HEATMAP_LOW_PERCENTILE)), max(flat)
     cmap = LinearSegmentedColormap.from_list("blue", BLUE_RAMP)
     fig, ax = plt.subplots(figsize=(9.5, 0.55 * len(results.methods) + 1.6))
     fig.patch.set_facecolor(theme["surface"])
-    ax.imshow(values, cmap=cmap, vmin=min(flat), vmax=max(flat), aspect="auto")
+    ax.imshow(values, cmap=cmap, vmin=low, vmax=high, aspect="auto")
     ax.set_xticks(range(len(results.datasets)), [short_name(d) for d in results.datasets])
     ax.set_yticks(range(len(results.methods)), [results.labels[m] for m in results.methods])
     ax.xaxis.tick_top()
@@ -238,11 +244,11 @@ def chart_heatmap(results: Results, path: Path, theme: dict) -> None:
     ax.set_yticks([y - 0.5 for y in range(1, len(results.methods))], minor=True)
     ax.grid(which="minor", color=theme["surface"], linewidth=2)
     ax.tick_params(which="minor", length=0)
-    span = (max(flat) - min(flat)) or 1.0
+    span = (high - low) or 1.0
     for i, row in enumerate(values):
         for j, value in enumerate(row):
             if value == value:
-                dark_cell = (value - min(flat)) / span > 0.55
+                dark_cell = (value - low) / span > 0.55
                 ax.text(j, i, f"{100 * value:.1f}", ha="center", va="center", fontsize=10,
                         color="#ffffff" if dark_cell else "#0b0b0b")
     ax.set_title("Macro-F1 on held-out test sets (%) · darker is better", loc="left", color=theme["ink"],
@@ -303,8 +309,9 @@ def chart_then_now(results: Results, historical: dict, path: Path, theme: dict) 
     ax.invert_yaxis()
     ax.set_xlim(min(r[1] for r in rows) - 5, 103)
     ax.set_xlabel("Accuracy (%)", color=theme["ink2"])
-    ax.set_title("GURA then, best method now · accuracy", loc="left", color=theme["ink"], fontsize=12)
-    legend = ax.legend(loc="lower left", frameon=False, fontsize=9.5, labelcolor=theme["ink2"])
+    ax.set_title("GURA then, best method now · accuracy", loc="left", color=theme["ink"], fontsize=12, pad=30)
+    legend = ax.legend(loc="lower left", bbox_to_anchor=(0, 1.0), ncol=2, frameon=False, fontsize=9.5,
+                       labelcolor=theme["ink2"], borderaxespad=0.2)
     for handle in legend.legend_handles:
         handle.set_sizes([60])
     _save(fig, path, theme)
