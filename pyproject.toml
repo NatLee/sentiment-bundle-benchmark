@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sentiment-bundle-benchmark"
+version = "0.1.0"
+description = "Reproducible benchmark of modern sentiment classifiers on NatLee's sentiment dataset bundle and MyAnimeList reviews"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [{ name = "Nat Lee" }]
+keywords = ["sentiment-analysis", "benchmark", "text-classification", "myanimelist", "nlp"]
+dependencies = [
+    "numpy>=1.26",
+    "pandas>=2.2",
+    "scikit-learn>=1.5",
+    "matplotlib>=3.9",
+    "threadpoolctl>=3.1",
+]
+
+[project.optional-dependencies]
+# Everything that needs a neural network: sentence embeddings, fine-tuning, the local LLM.
+models = [
+    "torch>=2.4",
+    "transformers>=5.0",
+    "sentence-transformers>=5.0",
+    "sentencepiece>=0.2",
+    "protobuf>=5",
+]
+test = ["pytest>=8"]
+
+[project.scripts]
+sbb = "sentiment_bundle_benchmark.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/NatLee/sentiment-bundle-benchmark"
+Dataset = "https://huggingface.co/datasets/NatLee/sentiment-classification-dataset-bundle"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["smoke: end-to-end run with tiny models downloaded from the Hugging Face Hub (needs the [models] extra)"]
+addopts = "-m 'not smoke'"

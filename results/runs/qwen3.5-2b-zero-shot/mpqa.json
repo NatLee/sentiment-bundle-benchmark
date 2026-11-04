@@ -1,0 +1,70 @@
+{
+  "method": "qwen3.5-2b-zero-shot",
+  "method_label": "Qwen3.5-2B, zero-shot",
+  "kind": "llm",
+  "dataset": "mpqa",
+  "labels": [
+    "negative",
+    "positive"
+  ],
+  "metrics": {
+    "accuracy": 0.8802211302211302,
+    "macro_f1": 0.8507934792059804,
+    "accuracy_ci95": [
+      0.8648495085995086,
+      0.8955927518427518
+    ],
+    "macro_f1_ci95": [
+      0.8309958348306239,
+      0.8704344072691784
+    ],
+    "confusion_matrix": [
+      [
+        1078,
+        84
+      ],
+      [
+        111,
+        355
+      ]
+    ],
+    "n": 1628
+  },
+  "n_train": 5863,
+  "n_val": 651,
+  "n_test": 1628,
+  "train_seconds": 0.0,
+  "infer_seconds": 17.8,
+  "throughput_per_s": 91.5,
+  "peak_vram_mb": 4119.5,
+  "params": 1881825088,
+  "size_mb": 3589.3,
+  "device": "cuda",
+  "seed": 42,
+  "cpu_threads": 4,
+  "method_config": {
+    "model": "Qwen/Qwen3.5-2B",
+    "revision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+    "shots": 0,
+    "max_input_tokens": 512,
+    "batch_size": 16
+  },
+  "details": {
+    "shots": 0,
+    "prompt_tokens_mean": 44.945945945945944,
+    "prompt_tokens_max": 73,
+    "prompt_template": "<|im_start|>user\nClassify the opinion in a short news phrase as positive or negative. Answer with one word: negative or positive.\n\nText: {text from the test split}\nAnswer:<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+  },
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-5.15.167.4-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "numpy": "2.5.3",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1",
+    "torch": "2.14.1+cu132",
+    "transformers": "5.20.2",
+    "sentence-transformers": "6.1.0",
+    "gpu": "NVIDIA GeForce RTX 4080"
+  },
+  "finished_at": "2026-11-04T00:03:38+00:00"
+}

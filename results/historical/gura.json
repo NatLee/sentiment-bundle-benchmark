@@ -1,0 +1,18 @@
+{
+  "source": "https://github.com/NatLee/gura-gru-unit-for-recognizing-affect",
+  "metric": "accuracy",
+  "note": "GURA (2019, BiGRU + self-attention on GloVe vectors, Keras) is kept here as history, not as a competitor. Its numbers are validation accuracy at the best epoch, on validation sets that mixed in the test split, after re-training until a target was hit, so they are optimistic and not comparable with the held-out test scores above. The 2019 claim comes from a commit message; the 2023 values are read off the training charts in GURA's README (about one point of reading error). The MyAnimeList column used the summarised `myanimelist-sts` text, not the full reviews.",
+  "values": {
+    "imdb": {"claim_2019": 0.891, "chart_2023": 0.731},
+    "myanimelist": {"chart_2023": 0.685},
+    "sst2": {"chart_2023": 0.61},
+    "mr": {"chart_2023": 0.60},
+    "subj": {"chart_2023": 0.70},
+    "mpqa": {"chart_2023": 0.32}
+  },
+  "evidence": {
+    "claim_2019": "commit f6be0f3 (2019-05-21): \"Update IMDB val acc to 89.10\"",
+    "chart_2023": "doc/model-*.png in GURA at commit ef9ff0a; IMDB also printed as 0.73096 in the README's evaluate.py log",
+    "targets_in_command_py": {"imdb": 0.8905, "sst2": 0.83, "mpqa": 0.8814, "mr": 0.87, "subj": 0.915, "myanimelist": 0.85}
+  }
+}

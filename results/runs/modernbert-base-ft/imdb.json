@@ -1,0 +1,86 @@
+{
+  "method": "modernbert-base-ft",
+  "method_label": "ModernBERT-base, fine-tuned",
+  "kind": "finetune",
+  "dataset": "imdb",
+  "labels": [
+    "negative",
+    "positive"
+  ],
+  "metrics": {
+    "accuracy": 0.9088,
+    "macro_f1": 0.9087935644739094,
+    "accuracy_ci95": [
+      0.9008,
+      0.917
+    ],
+    "macro_f1_ci95": [
+      0.9007806780560984,
+      0.9169805701011052
+    ],
+    "confusion_matrix": [
+      [
+        2251,
+        234
+      ],
+      [
+        222,
+        2293
+      ]
+    ],
+    "n": 5000
+  },
+  "n_train": 22901,
+  "n_val": 2000,
+  "n_test": 5000,
+  "train_seconds": 384.88,
+  "infer_seconds": 13.05,
+  "throughput_per_s": 383.1,
+  "peak_vram_mb": 7059.8,
+  "params": 149606402,
+  "size_mb": 570.7,
+  "device": "cuda",
+  "seed": 42,
+  "cpu_threads": 4,
+  "method_config": {
+    "model": "answerdotai/ModernBERT-base",
+    "revision": "8949b909ec900327062f0ebf497f51aef5e6f0c8",
+    "max_length": 512,
+    "batch_size": 16,
+    "epochs": 2,
+    "learning_rate": 5e-05,
+    "weight_decay": 0.01,
+    "warmup_ratio": 0.06
+  },
+  "details": {
+    "history": [
+      {
+        "epoch": 1,
+        "train_loss": 0.3712222975153247,
+        "val_accuracy": 0.8935,
+        "val_macro_f1": 0.8932488947125876
+      },
+      {
+        "epoch": 2,
+        "train_loss": 0.17247614825167823,
+        "val_accuracy": 0.9145,
+        "val_macro_f1": 0.9144994656216601
+      }
+    ],
+    "best_epoch": 2,
+    "train_steps": 2864,
+    "longest_input_tokens": 512
+  },
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-5.15.167.4-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "numpy": "2.5.3",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1",
+    "torch": "2.14.1+cu132",
+    "transformers": "5.20.2",
+    "sentence-transformers": "6.1.0",
+    "gpu": "NVIDIA GeForce RTX 4080"
+  },
+  "finished_at": "2026-11-04T02:28:11+00:00"
+}

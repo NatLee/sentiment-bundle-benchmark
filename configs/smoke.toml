@@ -1,0 +1,71 @@
+# A seconds-long, CPU-friendly run of every method kind with tiny random models.
+# CI uses it on fixture data (tests/test_smoke.py); you can also point it at the real data
+# to check the pipeline end to end before spending GPU time. The scores mean nothing.
+
+seed = 42
+data_dir = "data"
+results_dir = "results-smoke"
+datasets = ["myanimelist", "imdb"]
+
+[splits]
+max_train = 200
+max_val = 40
+max_test = 40
+val_fraction = 0.1
+test_fraction = 0.2
+
+[sources.bundle]
+description = "NatLee/sentiment-classification-dataset-bundle on the Hugging Face Hub"
+url = "https://huggingface.co/datasets/NatLee/sentiment-classification-dataset-bundle/resolve/d1d7692228acbde386a054bcff9e3d0bda907fb3/{file}"
+
+[sources.bundle.files]
+"aclImdb.pkl" = "c44fb11144a9121b2f35932fd683d20b24b6a7006976353921743fefe4815ffb"
+
+[sources.malcod]
+description = "MyAnimeList Comment Dataset (MALCoD) on Kaggle, dataset version 2"
+url = "https://www.kaggle.com/api/v1/datasets/download/natlee/myanimelist-comment-dataset?datasetVersionNumber=2"
+archive = "myanimelist-comment-dataset.zip"
+
+[sources.malcod.files]
+"animeReviewsOrderByTime.csv" = "28dfa1d26db0358d398aea21b8041e54505a85528d1a2cf9097725a79815ccf9"
+
+[dataset_options.myanimelist]
+positive_min_rating = 6
+test_from = "2018-01-01"
+
+[[methods]]
+name = "tfidf-logreg"
+kind = "tfidf"
+min_df = 1
+solver = "liblinear"
+c_grid = [1.0]
+
+[[methods]]
+name = "tiny-embedding-logreg"
+kind = "embedding"
+model = "sentence-transformers-testing/stsb-bert-tiny-safetensors"
+revision = "f3cb857cba53019a20df283396bcca179cf051a4"
+max_length = 64
+batch_size = 16
+prompt = ""
+c_grid = [1.0]
+
+[[methods]]
+name = "tiny-modernbert-ft"
+kind = "finetune"
+model = "hf-internal-testing/tiny-random-ModernBertForSequenceClassification"
+revision = "a426cb610e1dc138c3967fe95f09e76ceee09693"
+max_length = 64
+batch_size = 16
+epochs = 1
+learning_rate = 1e-4
+
+[[methods]]
+name = "tiny-qwen3-2-shot"
+kind = "llm"
+model = "trl-internal-testing/tiny-Qwen3ForCausalLM"
+revision = "25bb9b8963688237e94750f6f3e48f1947d3c7a3"
+shots = 2
+max_demo_tokens = 16
+max_input_tokens = 64
+batch_size = 8

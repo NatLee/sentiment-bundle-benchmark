@@ -1,0 +1,81 @@
+{
+  "method": "granite-small-r2-logreg",
+  "method_label": "granite-embedding-small-r2 (47M, frozen) + LR",
+  "kind": "embedding",
+  "dataset": "mr",
+  "labels": [
+    "negative",
+    "positive"
+  ],
+  "metrics": {
+    "accuracy": 0.7190431519699813,
+    "macro_f1": 0.7190416066884338,
+    "accuracy_ci95": [
+      0.7002696998123827,
+      0.7368667917448405
+    ],
+    "macro_f1_ci95": [
+      0.7001394477994799,
+      0.7368462392801329
+    ],
+    "confusion_matrix": [
+      [
+        769,
+        297
+      ],
+      [
+        302,
+        764
+      ]
+    ],
+    "n": 2132
+  },
+  "n_train": 7677,
+  "n_val": 853,
+  "n_test": 2132,
+  "train_seconds": 3.01,
+  "infer_seconds": 0.68,
+  "throughput_per_s": 3152.9,
+  "peak_vram_mb": 174.4,
+  "params": 47662849,
+  "size_mb": 90.9,
+  "device": "cuda",
+  "seed": 42,
+  "cpu_threads": 4,
+  "method_config": {
+    "model": "ibm-granite/granite-embedding-small-english-r2",
+    "revision": "2ab6fa8ea2d674564defd37171ae19079b864b33",
+    "max_length": 512,
+    "batch_size": 64,
+    "prompt": "",
+    "c_grid": [
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ]
+  },
+  "details": {
+    "c": 10.0,
+    "val_macro_f1_by_c": {
+      "0.1": 0.6673,
+      "1.0": 0.691,
+      "10.0": 0.703,
+      "100.0": 0.6983
+    },
+    "embedding_dim": 384,
+    "max_length": 512
+  },
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-5.15.167.4-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "numpy": "2.5.3",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1",
+    "torch": "2.14.1+cu132",
+    "transformers": "5.20.2",
+    "sentence-transformers": "6.1.0",
+    "gpu": "NVIDIA GeForce RTX 4080"
+  },
+  "finished_at": "2026-11-04T02:08:06+00:00"
+}

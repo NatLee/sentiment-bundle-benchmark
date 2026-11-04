@@ -1,0 +1,78 @@
+{
+  "method": "tfidf-logreg",
+  "method_label": "TF-IDF + logistic regression",
+  "kind": "tfidf",
+  "dataset": "imdb",
+  "labels": [
+    "negative",
+    "positive"
+  ],
+  "metrics": {
+    "accuracy": 0.893,
+    "macro_f1": 0.8929996533188768,
+    "accuracy_ci95": [
+      0.884795,
+      0.901205
+    ],
+    "macro_f1_ci95": [
+      0.8847855439274143,
+      0.9011695440210639
+    ],
+    "confusion_matrix": [
+      [
+        2237,
+        248
+      ],
+      [
+        287,
+        2228
+      ]
+    ],
+    "n": 5000
+  },
+  "n_train": 22901,
+  "n_val": 2000,
+  "n_test": 5000,
+  "train_seconds": 26.31,
+  "infer_seconds": 1.68,
+  "throughput_per_s": 2984.1,
+  "peak_vram_mb": null,
+  "params": 200001,
+  "size_mb": 9.4,
+  "device": "cpu",
+  "seed": 42,
+  "cpu_threads": 4,
+  "method_config": {
+    "ngram_max": 2,
+    "min_df": 2,
+    "max_features": 200000,
+    "solver": "liblinear",
+    "c_grid": [
+      0.25,
+      1.0,
+      4.0,
+      16.0
+    ]
+  },
+  "details": {
+    "c": 16.0,
+    "val_macro_f1_by_c": {
+      "0.25": 0.8804,
+      "1.0": 0.8935,
+      "4.0": 0.9005,
+      "16.0": 0.904
+    },
+    "vocabulary": 200000
+  },
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-5.15.167.4-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "numpy": "2.5.3",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1",
+    "torch": "2.14.1+cu132",
+    "transformers": "5.20.2",
+    "sentence-transformers": "6.1.0"
+  },
+  "finished_at": "2026-11-03T23:47:17+00:00"
+}

@@ -1,0 +1,70 @@
+{
+  "method": "qwen3.5-2b-zero-shot",
+  "method_label": "Qwen3.5-2B, zero-shot",
+  "kind": "llm",
+  "dataset": "subj",
+  "labels": [
+    "subjective",
+    "objective"
+  ],
+  "metrics": {
+    "accuracy": 0.5185,
+    "macro_f1": 0.373175627011509,
+    "accuracy_ci95": [
+      0.4955,
+      0.541
+    ],
+    "macro_f1_ci95": [
+      0.3577175188882666,
+      0.3898761472116689
+    ],
+    "confusion_matrix": [
+      [
+        1000,
+        0
+      ],
+      [
+        963,
+        37
+      ]
+    ],
+    "n": 2000
+  },
+  "n_train": 7200,
+  "n_val": 800,
+  "n_test": 2000,
+  "train_seconds": 0.0,
+  "infer_seconds": 10.92,
+  "throughput_per_s": 183.1,
+  "peak_vram_mb": 4345.0,
+  "params": 1881825088,
+  "size_mb": 3589.3,
+  "device": "cuda",
+  "seed": 42,
+  "cpu_threads": 4,
+  "method_config": {
+    "model": "Qwen/Qwen3.5-2B",
+    "revision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+    "shots": 0,
+    "max_input_tokens": 512,
+    "batch_size": 16
+  },
+  "details": {
+    "shots": 0,
+    "prompt_tokens_mean": 73.078,
+    "prompt_tokens_max": 145,
+    "prompt_template": "<|im_start|>user\nClassify a movie sentence as subjective (an opinion) or objective (a plot fact). Answer with one word: subjective or objective.\n\nText: {text from the test split}\nAnswer:<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+  },
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-5.15.167.4-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "numpy": "2.5.3",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1",
+    "torch": "2.14.1+cu132",
+    "transformers": "5.20.2",
+    "sentence-transformers": "6.1.0",
+    "gpu": "NVIDIA GeForce RTX 4080"
+  },
+  "finished_at": "2026-11-04T01:29:37+00:00"
+}
