@@ -20,12 +20,33 @@ test_fraction = 0.2
 
 # ---------------------------------------------------------------- sources
 # Files are downloaded once into <data_dir>/raw and checked against these SHA-256 sums.
+# Each dataset uses the first layout whose files one of these sources lists (Parquet first, see
+# datasets.py). The Parquet bundle gives exactly the same rows as the older files below, so the
+# split fingerprints in results/splits.json hold either way.
 
 [sources.bundle]
-description = "NatLee/sentiment-classification-dataset-bundle on the Hugging Face Hub"
-url = "https://huggingface.co/datasets/NatLee/sentiment-classification-dataset-bundle/resolve/d1d7692228acbde386a054bcff9e3d0bda907fb3/{file}"
+description = "NatLee/sentiment-classification-dataset-bundle on the Hugging Face Hub, Parquet revision (November 2026)"
+url = "https://huggingface.co/datasets/NatLee/sentiment-classification-dataset-bundle/resolve/REVISION_PENDING_UPLOAD/{file}"
 
 [sources.bundle.files]
+"myanimelist/train.parquet" = "0ac2f07d54ad855bbcb055877818b945fc1dddd738b2bd6e2da224597a821403"
+"aclImdb/train.parquet" = "c6dcd4178a425170a5b1f702b7abc01005d3d4cd1f5b45765b317ab865697493"
+"aclImdb/test.parquet" = "5c34347ad6cee012094c780b793f12d8efe85095437b6533f982db80110a03ef"
+"SST2/train.parquet" = "8e845533e5942c4bceb8e1369d55d57b97f6d1de9379ff43b18c99bf1fa42931"
+"SST2/validation.parquet" = "88311ced018e295d913a2c3f8b02b651e7825a75aab1a478820d7b871ee2824a"
+"SST2/test.parquet" = "6426d49a21812ccae142a80c4e1a0edba6903c0ab6bfbc96c64b3b7d5580b45c"
+"MR/train.parquet" = "9981787dc7e3716ab11d20fd0a9f8259fa2d621cef8fab1403906b0d782c4c12"
+"SUBJ/train.parquet" = "14117c6834c978a2198706983d08757b559ad9446331bcbc2c95c4010b2308bc"
+"MPQA/train.parquet" = "2a2aa6d52863e7a04ba34f8609e6023b5bf311bb86b74751b2e5d82fa04c83ed"
+
+# Fallbacks, used only when a dataset has no Parquet file above (for example to re-check the first run
+# against the files it was made from). The 2023 pickles stay in the bundle's history at this revision
+# and are read with the allow-list unpickler; IMDB's generated half is dropped on the way in.
+[sources.bundle-2023]
+description = "The 2023 pickles of the same bundle, pinned to their revision"
+url = "https://huggingface.co/datasets/NatLee/sentiment-classification-dataset-bundle/resolve/d1d7692228acbde386a054bcff9e3d0bda907fb3/{file}"
+
+[sources.bundle-2023.files]
 "aclImdb.pkl" = "c44fb11144a9121b2f35932fd683d20b24b6a7006976353921743fefe4815ffb"
 "SST2.pkl" = "f183553f3c5d95bfeb66fbf36b2271659254ff914675041a55d61f0bc9cfba4a"
 "MR.pkl" = "00e84e4816276b3e0a47e7e4b6ccf0fec814815509b60387271f5cf4cbd01553"

@@ -39,7 +39,7 @@ attention model that was written to introduce these datasets. Its numbers are ke
 
 | Dataset | One example is | Labels | Train / val / test used here | Source |
 |---|---|---|---:|---|
-| **MyAnimeList** (MALCoD) | a full anime review, 2006-2019 | negative (rating 1-5) / positive (6-10) | 25,000 / 2,000 / 5,000 | [Kaggle](https://www.kaggle.com/datasets/natlee/myanimelist-comment-dataset) |
+| **MyAnimeList** (MALCoD) | a full anime review, 2006-2019 | negative (rating 1-5) / positive (6-10) | 25,000 / 2,000 / 5,000 | bundle, from [MALCoD](https://www.kaggle.com/datasets/natlee/myanimelist-comment-dataset) |
 | **IMDB** (aclImdb) | a movie review | negative / positive | 22,901 / 2,000 / 5,000 | [bundle](https://huggingface.co/datasets/NatLee/sentiment-classification-dataset-bundle) |
 | **SST-2** | a movie-review sentence or phrase | negative / positive | 25,000 / 872 / 1,819 | bundle |
 | **MR** | a Rotten Tomatoes snippet | negative / positive | 7,677 / 853 / 2,132 | bundle |
@@ -76,10 +76,10 @@ the answer starts and the label whose first token is more likely wins, which is 
 
 ```mermaid
 flowchart LR
-    HF["Hugging Face bundle<br/>IMDB · SST-2 · MR · SUBJ · MPQA"] --> DL
-    KG["Kaggle MALCoD<br/>135K MyAnimeList reviews"] --> DL
+    HF["Hugging Face bundle, Parquet<br/>MyAnimeList · IMDB · SST-2 · MR · SUBJ · MPQA"] --> DL
+    OLD["fallback: 2023 pickles at a pinned revision,<br/>Kaggle MALCoD CSV"] -.-> DL
     DL["sbb download<br/>pinned revision, SHA-256 check"] --> PR
-    PR["sbb prepare<br/>safe unpickling, clean-up,<br/>dedupe, fixed-seed splits"] --> SP[("data/processed<br/>train / val / test")]
+    PR["sbb prepare<br/>read, clean up,<br/>dedupe, fixed-seed splits"] --> SP[("data/processed<br/>train / val / test")]
     SP --> M1["TF-IDF + LR"]
     SP --> M2["frozen embeddings + LR"]
     SP --> M3["fine-tuned encoders"]
@@ -305,7 +305,7 @@ docker build -t sentiment-bundle-benchmark .
 # One alias so the commands below stay short. The named volume keeps downloaded models between runs.
 alias sbb='docker run --rm --gpus all --memory 10g -v "$PWD:/app" -v sbb-hfcache:/cache/huggingface -w /app sentiment-bundle-benchmark'
 
-sbb download                         # about 300 MB of raw files into data/raw, checked by SHA-256
+sbb download                         # about 240 MB of Parquet into data/raw, checked by SHA-256
 sbb prepare                          # fixed splits into data/processed, fingerprints into results/splits.json
 sbb run --methods tfidf-logreg       # one method on all six datasets, a few minutes on CPU
 sbb run                              # everything that has no result yet (about 3 GPU-hours)
@@ -348,35 +348,37 @@ negative    97.6%  Twelve episodes of nothing happening. I want my weekend back.
 
 ## Notes on the data
 
-Re-reading the 2023 bundle for this benchmark turned up a few things worth knowing before you use it.
-The loaders deal with each of them in code, so `sbb prepare` gives clean splits from the files as they
-are published.
+Re-reading the 2023 bundle for this benchmark turned up three problems, and the bundle was rebuilt as
+Parquet in November 2026 to fix them. `sbb download` fetches the Parquet files. The loaders still
+read the 2023 files (pinned to their revision in [`configs/benchmark.toml`](configs/benchmark.toml)) and
+both give exactly the same rows, so the split fingerprints in `results/splits.json` hold either way.
 
-- **The bundle files are Python pickles.** A pickle can run arbitrary code while it loads, and the Hugging
-  Face viewer cannot show them. The loader only accepts the nine pandas/numpy names that the files
-  actually use ([`safe_pickle.py`](src/sentiment_bundle_benchmark/safe_pickle.py)) and refuses
-  everything else.
-- **Half of the bundle's IMDB training set is not real.** `aclImdb.pkl` has 50,000 training rows instead
+- **The 2023 files were Python pickles.** A pickle can run arbitrary code while it loads, and the Hugging
+  Face viewer cannot show it. The rebuilt bundle is plain Parquet. For the old files, the loader only
+  accepts the nine pandas/numpy names they actually use
+  ([`safe_pickle.py`](src/sentiment_bundle_benchmark/safe_pickle.py)) and refuses everything else.
+- **Half of the 2023 IMDB training set was not real.** `aclImdb.pkl` had 50,000 training rows instead
   of 25,000: for each class, 12,500 real reviews followed by 12,500 reviews that GURA's "augmentation"
   glued together from random word spans. The fake ones are all about the average length (word-count
-  spread of ~4.5 words against ~85 for real reviews), which is how the reader finds them, drops them,
-  and refuses to continue if the layout ever changes.
-- **The bundle's IMDB text is pre-processed.** It is lower-cased, with punctuation and stop words
-  removed, including *not*, *no* and *never*. That costs every method a few points compared with the
-  usual IMDB numbers (fine-tuned base encoders reach about 95% on the original text).
-- **The labels in `myanimelist-sts.pkl` are misaligned.** It holds 135,077 summaries but 135,206 scores,
-  and the scores slide out of line with the text: a few rows at the start, about 119 rows by the end. On
-  the file as published, word sentiment and score have a correlation of about zero. So the MyAnimeList
-  task here uses the full reviews from the Kaggle MALCoD file the bundle was built from, which has exactly
-  the 135,206 rows the scores belong to. Three rows with an impossible rating (0 or 11) are dropped.
-- **MR, SUBJ and MPQA have no official split.** Every row is marked `train`, so the benchmark carves a
+  spread of ~4.8 words against ~86 for real reviews). The rebuilt bundle drops them; for the old file,
+  the reader finds and drops them, and refuses to continue if the layout ever changes.
+- **The labels in `myanimelist-sts.pkl` were misaligned.** It held 135,077 summaries but 135,206 scores,
+  and the scores slid out of line with the text: a few rows at the start, about 119 rows by the end. On
+  that file, word sentiment and score have a correlation of 0.003; on the rebuilt `myanimelist` config
+  it is 0.44. The rebuilt config holds the full reviews from the Kaggle MALCoD file the old one was built
+  from, which has exactly the 135,206 rows the scores belong to; three rows with an impossible rating
+  (0 or 11) are dropped.
+
+Things the rebuild did not change, and how the benchmark handles them:
+
+- **The IMDB text is pre-processed.** It is lower-cased, with punctuation and stop words removed,
+  including *not*, *no* and *never*. That costs every method a few points compared with the usual IMDB
+  numbers (fine-tuned base encoders reach about 95% on the original text).
+- **MR, SUBJ and MPQA have no official split.** Everything is in `train`, so the benchmark carves a
   stratified 20% test split and 10% of the rest for validation with the fixed seed.
 - **Duplicates.** MPQA has 2,365 repeated phrases ("complaining", "failing to support", ...), and a few
   texts repeat across splits elsewhere. Every dataset is de-duplicated the same way: copies that disagree
   on the label are dropped, otherwise one copy is kept, preferring train over validation over test.
-
-If you maintain the bundle, publishing Parquet versions without the fake IMDB half and with re-aligned
-anime labels would fix the first, second and fourth points for everyone.
 
 ## Should the fine-tuned models go on the Hugging Face Hub?
 
@@ -404,8 +406,8 @@ CI runs both on GitHub Actions (CPU only). The code is small on purpose:
 src/sentiment_bundle_benchmark/
   config.py        TOML config -> typed objects
   sources.py       downloads + SHA-256 checks
-  safe_pickle.py   unpickler that only accepts the DataFrame building blocks
-  datasets.py      the six datasets: readers, labels, citations
+  datasets.py      the six datasets: file layouts, readers, labels, citations
+  safe_pickle.py   unpickler for the 2023 files that only accepts the DataFrame building blocks
   splits.py        dedupe, fixed-seed splits, caps, fingerprints
   metrics.py       accuracy, macro-F1, confusion matrix, bootstrap intervals
   methods/         tfidf, embedding, finetune, llm (+ prompting)
@@ -421,7 +423,7 @@ repository and keep their own terms; `sbb download` fetches them from their publ
 if you use the numbers:
 
 - MyAnimeList: N. Lee, "MyAnimeList Comment Dataset (MALCoD)," Kaggle, 2019. ODbL 1.0 (database) and DbCL 1.0 (contents).
-- Bundle: N. Lee, "sentiment-classification-dataset-bundle," Hugging Face, 2023.
+- Bundle: N. Lee, "sentiment-classification-dataset-bundle," Hugging Face, 2023 (rebuilt as Parquet in 2026).
 - IMDB: A. L. Maas et al., "Learning Word Vectors for Sentiment Analysis," ACL 2011.
 - SST-2: R. Socher et al., "Recursive Deep Models for Semantic Compositionality Over a Sentiment Treebank," EMNLP 2013.
 - MR: B. Pang and L. Lee, "Seeing stars: Exploiting class relationships for sentiment categorization with respect to rating scales," ACL 2005.
