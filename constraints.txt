@@ -1,0 +1,14 @@
+# Exact versions behind the published numbers. torch comes from the base image (2.14.1+cu132),
+# numpy too (2.5.3). Use with: pip install -c constraints.txt ".[models,test]"
+pandas==3.0.6
+scikit-learn==1.9.1
+scipy==1.18.1
+matplotlib==3.11.2
+transformers==5.20.2
+tokenizers==0.23.3
+huggingface-hub==1.33.0
+safetensors==0.8.0
+sentence-transformers==6.1.0
+sentencepiece==0.2.2
+protobuf==7.36.2
+pytest==9.1.1
