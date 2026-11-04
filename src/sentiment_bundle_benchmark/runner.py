@@ -13,7 +13,7 @@ from pathlib import Path
 from threadpoolctl import threadpool_limits
 
 from .config import BenchmarkConfig, MethodConfig
-from .datasets import get_spec, read_dataset
+from .datasets import get_spec, pick_layout, read_dataset
 from .metrics import evaluate
 from .methods import MethodInput, run_method
 from .splits import build_splits, describe, load_splits, save_splits, write_manifest
@@ -36,13 +36,13 @@ def prepare(config: BenchmarkConfig, datasets: list[str] | None = None) -> dict:
     manifest.setdefault("datasets", {})
     for name in datasets or config.datasets:
         spec = get_spec(name)
-        frame = read_dataset(spec, config.raw_dir, config.dataset_options.get(name))
+        layout, source = pick_layout(spec, config.sources)
+        frame = read_dataset(spec, config.raw_dir, config.sources, config.dataset_options.get(name))
         splits = build_splits(frame, config.splits, config.seed)
         save_splits(splits, config.processed_dir / name)
-        source = config.sources[spec.source]
         manifest["datasets"][name] = {
-            "source_file": spec.file,
-            "source_sha256": source.files.get(spec.file),
+            "source": source.name,
+            "source_files": {file: source.files[file] for file in layout.files},
             "rows_read": len(frame),
             "splits": describe(splits, spec.labels),
         }

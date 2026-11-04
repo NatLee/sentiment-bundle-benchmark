@@ -14,7 +14,7 @@ import zipfile
 from pathlib import Path
 
 from .config import BenchmarkConfig, SourceConfig
-from .datasets import get_spec
+from .datasets import get_spec, pick_layout
 
 USER_AGENT = "sentiment-bundle-benchmark (+https://github.com/NatLee/sentiment-bundle-benchmark)"
 CHUNK = 1 << 20
@@ -97,8 +97,8 @@ def download(config: BenchmarkConfig, datasets: list[str] | None = None, *, quie
     """Fetch the raw files behind `datasets` (default: all datasets in the config)."""
     needed: dict[str, list[str]] = {}
     for name in datasets or config.datasets:
-        spec = get_spec(name)
-        needed.setdefault(spec.source, []).append(spec.file)
+        layout, source = pick_layout(get_spec(name), config.sources)
+        needed.setdefault(source.name, []).extend(layout.files)
     paths: list[Path] = []
     for source_name, names in needed.items():
         paths.extend(fetch_source(config.sources[source_name], config.raw_dir, names, quiet=quiet))

@@ -5,7 +5,7 @@ import pytest
 from conftest import REPO
 
 from sentiment_bundle_benchmark.config import ConfigError, SourceConfig, load_config
-from sentiment_bundle_benchmark.datasets import get_spec
+from sentiment_bundle_benchmark.datasets import get_spec, pick_layout
 from sentiment_bundle_benchmark.sources import ChecksumError, fetch_source
 
 
@@ -14,8 +14,16 @@ def test_shipped_configs_load_and_cover_every_dataset_file(name):
     config = load_config(REPO / "configs" / name, root=REPO)
     assert config.methods and config.datasets
     for dataset in config.datasets:
-        spec = get_spec(dataset)
-        assert spec.file in config.sources[spec.source].files, f"{dataset}: no checksum for {spec.file}"
+        pick_layout(get_spec(dataset), config.sources)  # raises if no source lists the files it needs
+
+
+def test_full_config_reads_every_dataset_from_the_parquet_bundle():
+    config = load_config(REPO / "configs" / "benchmark.toml", root=REPO)
+    for dataset in config.datasets:
+        layout, source = pick_layout(get_spec(dataset), config.sources)
+        assert source.name == "bundle" and all(f.endswith(".parquet") for f in layout.files)
+    old = {k: v for k, v in config.sources.items() if k != "bundle"}  # the 2023 files still work as a fallback
+    assert {pick_layout(get_spec(d), old)[1].name for d in config.datasets} == {"bundle-2023", "malcod"}
 
 
 def test_full_config_pins_every_model_revision():
