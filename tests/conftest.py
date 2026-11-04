@@ -61,6 +61,20 @@ def malcod_rows(n: int = 120, seed: int = 0) -> list[tuple[str, int, str]]:
     return rows
 
 
+def write_bundle_parquet(root: Path, config: str, frame) -> list[Path]:
+    """The Parquet bundle layout: <config>/<split>.parquet with text and label columns."""
+    names = {"train": "train", "val": "validation", "test": "test"}
+    paths = []
+    for split in ("train", "val", "test"):
+        part = frame[frame["split"] == split]
+        if len(part):
+            path = root / config / f"{names[split]}.parquet"
+            path.parent.mkdir(parents=True, exist_ok=True)
+            part[["text", "label"]].to_parquet(path, index=False)
+            paths.append(path)
+    return paths
+
+
 @pytest.fixture
 def raw_dir(tmp_path: Path) -> Path:
     """data/raw with the two fixture-friendly datasets (IMDB pickle and MALCoD CSV)."""

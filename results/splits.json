@@ -7,8 +7,10 @@
   },
   "datasets": {
     "myanimelist": {
-      "source_file": "animeReviewsOrderByTime.csv",
-      "source_sha256": "28dfa1d26db0358d398aea21b8041e54505a85528d1a2cf9097725a79815ccf9",
+      "source": "bundle",
+      "source_files": {
+        "myanimelist/train.parquet": "0ac2f07d54ad855bbcb055877818b945fc1dddd738b2bd6e2da224597a821403"
+      },
       "rows_read": 135203,
       "splits": {
         "train": {
@@ -38,8 +40,11 @@
       }
     },
     "imdb": {
-      "source_file": "aclImdb.pkl",
-      "source_sha256": "c44fb11144a9121b2f35932fd683d20b24b6a7006976353921743fefe4815ffb",
+      "source": "bundle",
+      "source_files": {
+        "aclImdb/train.parquet": "c6dcd4178a425170a5b1f702b7abc01005d3d4cd1f5b45765b317ab865697493",
+        "aclImdb/test.parquet": "5c34347ad6cee012094c780b793f12d8efe85095437b6533f982db80110a03ef"
+      },
       "rows_read": 50000,
       "splits": {
         "train": {
@@ -69,8 +74,12 @@
       }
     },
     "sst2": {
-      "source_file": "SST2.pkl",
-      "source_sha256": "f183553f3c5d95bfeb66fbf36b2271659254ff914675041a55d61f0bc9cfba4a",
+      "source": "bundle",
+      "source_files": {
+        "SST2/train.parquet": "8e845533e5942c4bceb8e1369d55d57b97f6d1de9379ff43b18c99bf1fa42931",
+        "SST2/validation.parquet": "88311ced018e295d913a2c3f8b02b651e7825a75aab1a478820d7b871ee2824a",
+        "SST2/test.parquet": "6426d49a21812ccae142a80c4e1a0edba6903c0ab6bfbc96c64b3b7d5580b45c"
+      },
       "rows_read": 79654,
       "splits": {
         "train": {
@@ -100,8 +109,10 @@
       }
     },
     "mr": {
-      "source_file": "MR.pkl",
-      "source_sha256": "00e84e4816276b3e0a47e7e4b6ccf0fec814815509b60387271f5cf4cbd01553",
+      "source": "bundle",
+      "source_files": {
+        "MR/train.parquet": "9981787dc7e3716ab11d20fd0a9f8259fa2d621cef8fab1403906b0d782c4c12"
+      },
       "rows_read": 10662,
       "splits": {
         "train": {
@@ -131,8 +142,10 @@
       }
     },
     "subj": {
-      "source_file": "SUBJ.pkl",
-      "source_sha256": "7bf361e5b2dcf089f1b3aa181b26fee449bac11bfc4183793d48821cc9b844ab",
+      "source": "bundle",
+      "source_files": {
+        "SUBJ/train.parquet": "14117c6834c978a2198706983d08757b559ad9446331bcbc2c95c4010b2308bc"
+      },
       "rows_read": 10000,
       "splits": {
         "train": {
@@ -162,8 +175,10 @@
       }
     },
     "mpqa": {
-      "source_file": "MPQA.pkl",
-      "source_sha256": "642d4b1a719d031873fd7ec545841aad02dc85cf397e7812615d2cc56e9fce36",
+      "source": "bundle",
+      "source_files": {
+        "MPQA/train.parquet": "2a2aa6d52863e7a04ba34f8609e6023b5bf311bb86b74751b2e5d82fa04c83ed"
+      },
       "rows_read": 10606,
       "splits": {
         "train": {
