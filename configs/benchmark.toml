@@ -1,0 +1,136 @@
+# The configuration behind the numbers in the README.
+# Every random choice (subsampling, splits, few-shot examples, fine-tuning) uses `seed`.
+
+seed = 42
+data_dir = "data"
+results_dir = "results"
+datasets = ["myanimelist", "imdb", "sst2", "mr", "subj", "mpqa"]
+# scikit-learn and BLAS start one thread per core. On a shared machine that oversubscribes the CPU
+# and made the TF-IDF fits up to 100x slower, so the CPU work is capped.
+cpu_threads = 4
+
+[splits]
+# Big sets are subsampled (stratified) so the whole run fits in about three GPU-hours.
+max_train = 25000
+max_val = 2000
+max_test = 5000
+# Used only when a dataset has no official split of that kind.
+val_fraction = 0.1
+test_fraction = 0.2
+
+# ---------------------------------------------------------------- sources
+# Files are downloaded once into <data_dir>/raw and checked against these SHA-256 sums.
+
+[sources.bundle]
+description = "NatLee/sentiment-classification-dataset-bundle on the Hugging Face Hub"
+url = "https://huggingface.co/datasets/NatLee/sentiment-classification-dataset-bundle/resolve/d1d7692228acbde386a054bcff9e3d0bda907fb3/{file}"
+
+[sources.bundle.files]
+"aclImdb.pkl" = "c44fb11144a9121b2f35932fd683d20b24b6a7006976353921743fefe4815ffb"
+"SST2.pkl" = "f183553f3c5d95bfeb66fbf36b2271659254ff914675041a55d61f0bc9cfba4a"
+"MR.pkl" = "00e84e4816276b3e0a47e7e4b6ccf0fec814815509b60387271f5cf4cbd01553"
+"SUBJ.pkl" = "7bf361e5b2dcf089f1b3aa181b26fee449bac11bfc4183793d48821cc9b844ab"
+"MPQA.pkl" = "642d4b1a719d031873fd7ec545841aad02dc85cf397e7812615d2cc56e9fce36"
+
+[sources.malcod]
+description = "MyAnimeList Comment Dataset (MALCoD) on Kaggle, dataset version 2; anonymous download, no API key needed"
+url = "https://www.kaggle.com/api/v1/datasets/download/natlee/myanimelist-comment-dataset?datasetVersionNumber=2"
+archive = "myanimelist-comment-dataset.zip"
+
+# Kaggle builds the zip on the fly, so the check is on the extracted file, not the archive.
+[sources.malcod.files]
+"animeReviewsOrderByTime.csv" = "28dfa1d26db0358d398aea21b8041e54505a85528d1a2cf9097725a79815ccf9"
+
+# ---------------------------------------------------------------- dataset options
+
+[dataset_options.myanimelist]
+# GURA's rule: an overall rating of 6 or more out of 10 counts as positive.
+positive_min_rating = 6
+# Reviews posted from this date on form the test pool, older ones the training pool.
+test_from = "2018-01-01"
+
+# ---------------------------------------------------------------- methods
+# kind = tfidf | embedding | finetune | llm. Model revisions are pinned to Hub commits.
+
+[[methods]]
+name = "tfidf-logreg"
+label = "TF-IDF + logistic regression"
+kind = "tfidf"
+ngram_max = 2
+min_df = 2
+max_features = 200000
+# liblinear is the fast choice for sparse features with two classes.
+solver = "liblinear"
+c_grid = [0.25, 1.0, 4.0, 16.0]
+
+[[methods]]
+name = "granite-small-r2-logreg"
+label = "granite-embedding-small-r2 (47M, frozen) + LR"
+kind = "embedding"
+model = "ibm-granite/granite-embedding-small-english-r2"
+revision = "2ab6fa8ea2d674564defd37171ae19079b864b33"
+max_length = 512
+batch_size = 64
+prompt = ""
+c_grid = [0.1, 1.0, 10.0, 100.0]
+
+[[methods]]
+name = "qwen3-embedding-0.6b-logreg"
+label = "Qwen3-Embedding-0.6B (frozen) + LR"
+kind = "embedding"
+model = "Qwen/Qwen3-Embedding-0.6B"
+revision = "97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3"
+max_length = 512
+batch_size = 32
+# Qwen3-Embedding expects a one-line task instruction in front of the text.
+prompt = "Instruct: {task}\nQuery: "
+c_grid = [0.1, 1.0, 10.0, 100.0]
+
+[[methods]]
+name = "modernbert-base-ft"
+label = "ModernBERT-base, fine-tuned"
+kind = "finetune"
+model = "answerdotai/ModernBERT-base"
+revision = "8949b909ec900327062f0ebf497f51aef5e6f0c8"
+max_length = 512
+batch_size = 16
+epochs = 2
+learning_rate = 5e-5
+weight_decay = 0.01
+warmup_ratio = 0.06
+
+[[methods]]
+name = "deberta-v3-base-ft"
+label = "DeBERTa-v3-base, fine-tuned"
+kind = "finetune"
+model = "microsoft/deberta-v3-base"
+revision = "8ccc9b6f36199bec6961081d44eb72fb3f7353f3"
+max_length = 512
+# DeBERTa attention needs more memory than ModernBERT; batches of 8 keep it under 8 GB of VRAM.
+batch_size = 8
+epochs = 2
+learning_rate = 2e-5
+weight_decay = 0.01
+warmup_ratio = 0.06
+
+[[methods]]
+name = "qwen3.5-2b-zero-shot"
+label = "Qwen3.5-2B, zero-shot"
+kind = "llm"
+model = "Qwen/Qwen3.5-2B"
+revision = "15852e8c16360a2fea060d615a32b45270f8a8fc"
+shots = 0
+max_input_tokens = 512
+batch_size = 16
+
+[[methods]]
+name = "qwen3.5-2b-8-shot"
+label = "Qwen3.5-2B, 8-shot"
+kind = "llm"
+model = "Qwen/Qwen3.5-2B"
+revision = "15852e8c16360a2fea060d615a32b45270f8a8fc"
+shots = 8
+# Each example in the prompt is cut to this many tokens so long reviews still fit.
+max_demo_tokens = 96
+max_input_tokens = 512
+batch_size = 8
