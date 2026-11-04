@@ -9,7 +9,13 @@ from conftest import fake_review
 from sentiment_bundle_benchmark.config import MethodConfig
 from sentiment_bundle_benchmark.datasets import get_spec
 from sentiment_bundle_benchmark.methods import MethodInput, run_method
-from sentiment_bundle_benchmark.methods.prompting import PromptError, build_prompt, label_token_ids, pick_demos
+from sentiment_bundle_benchmark.methods.prompting import (
+    PromptError,
+    build_prompt,
+    label_token_ids,
+    pick_demos,
+    prompt_template,
+)
 from sentiment_bundle_benchmark.splits import Splits
 
 
@@ -75,3 +81,9 @@ def test_prompt_lists_examples_then_the_question():
     assert prompt.startswith(spec.task) and "subjective or objective" in prompt
     assert prompt.index("Answer: subjective") < prompt.index("Text: The film follows a detective.")
     assert prompt.endswith("Answer:")
+
+
+def test_prompt_template_holds_no_dataset_text():
+    template = prompt_template(get_spec("mr"), ["negative", "positive"])
+    assert "{example 1 from the training split}" in template and "Answer: positive" in template
+    assert template.endswith("Text: {text from the test split}\nAnswer:")

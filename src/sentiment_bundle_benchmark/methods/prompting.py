@@ -53,3 +53,9 @@ def build_prompt(spec: DatasetSpec, text: str, demos: list[tuple[str, str]]) -> 
             lines += [f"Text: {demo_text}", f"Answer: {label}", ""]
     lines += [f"Text: {text}", "Answer:"]
     return "\n".join(lines)
+
+
+def prompt_template(spec: DatasetSpec, demo_labels: list[str]) -> str:
+    """The user message with placeholders instead of texts, for the run record."""
+    demos = [(f"{{example {i} from the training split}}", label) for i, label in enumerate(demo_labels, 1)]
+    return build_prompt(spec, "{text from the test split}", demos)

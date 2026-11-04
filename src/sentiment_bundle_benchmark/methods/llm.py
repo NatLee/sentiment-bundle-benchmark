@@ -13,7 +13,7 @@ import torch
 from ..config import MethodConfig
 from ._torch import peak_mb, pick_device, pick_dtype, reset_peak, seed_everything, sync, weights_of
 from .base import MethodInput, MethodOutput, Stopwatch
-from .prompting import build_prompt, label_token_ids, pick_demos, truncate
+from .prompting import build_prompt, label_token_ids, pick_demos, prompt_template, truncate
 
 
 def run(method: MethodConfig, data: MethodInput) -> MethodOutput:
@@ -39,12 +39,14 @@ def run(method: MethodConfig, data: MethodInput) -> MethodOutput:
         for text, label in pick_demos(train, int(method.get("shots", 0)), len(spec.labels), data.seed)
     ]
 
-    def to_prompt(text: str) -> str:
-        message = build_prompt(spec, truncate(tokenizer, text, max_input), demos)
+    def chat(message: str) -> str:
         return tokenizer.apply_chat_template(
             [{"role": "user", "content": message}], tokenize=False, add_generation_prompt=True,
             enable_thinking=False,  # Qwen3 templates: answer directly, no reasoning block
         )
+
+    def to_prompt(text: str) -> str:
+        return chat(build_prompt(spec, truncate(tokenizer, text, max_input), demos))
 
     infer_clock = Stopwatch()
     reset_peak(device)
@@ -76,6 +78,7 @@ def run(method: MethodConfig, data: MethodInput) -> MethodOutput:
             "shots": len(demos),
             "prompt_tokens_mean": float(np.mean(lengths)),
             "prompt_tokens_max": int(max(lengths)),
-            "example_prompt": to_prompt(test["text"].iloc[0]),
+            # The exact prompt with placeholders, so no dataset text ends up in the results.
+            "prompt_template": chat(prompt_template(spec, [label for _, label in demos])),
         },
     )
