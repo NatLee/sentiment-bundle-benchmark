@@ -1,0 +1,86 @@
+{
+  "method": "deberta-v3-base-ft",
+  "method_label": "DeBERTa-v3-base, fine-tuned",
+  "kind": "finetune",
+  "dataset": "subj",
+  "labels": [
+    "subjective",
+    "objective"
+  ],
+  "metrics": {
+    "accuracy": 0.966,
+    "macro_f1": 0.965999693997246,
+    "accuracy_ci95": [
+      0.9575,
+      0.9735125
+    ],
+    "macro_f1_ci95": [
+      0.957491755298856,
+      0.9735102493322664
+    ],
+    "confusion_matrix": [
+      [
+        963,
+        37
+      ],
+      [
+        31,
+        969
+      ]
+    ],
+    "n": 2000
+  },
+  "n_train": 7200,
+  "n_val": 800,
+  "n_test": 2000,
+  "train_seconds": 101.44,
+  "infer_seconds": 1.13,
+  "throughput_per_s": 1777.1,
+  "peak_vram_mb": 3557.5,
+  "params": 184423682,
+  "size_mb": 703.5,
+  "device": "cuda",
+  "seed": 42,
+  "cpu_threads": 4,
+  "method_config": {
+    "model": "microsoft/deberta-v3-base",
+    "revision": "8ccc9b6f36199bec6961081d44eb72fb3f7353f3",
+    "max_length": 512,
+    "batch_size": 8,
+    "epochs": 2,
+    "learning_rate": 2e-05,
+    "weight_decay": 0.01,
+    "warmup_ratio": 0.06
+  },
+  "details": {
+    "history": [
+      {
+        "epoch": 1,
+        "train_loss": 0.24259933977840573,
+        "val_accuracy": 0.955,
+        "val_macro_f1": 0.9549772072111506
+      },
+      {
+        "epoch": 2,
+        "train_loss": 0.0792363020508977,
+        "val_accuracy": 0.965,
+        "val_macro_f1": 0.9649964996499649
+      }
+    ],
+    "best_epoch": 2,
+    "train_steps": 1800,
+    "longest_input_tokens": 146
+  },
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-5.15.167.4-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "numpy": "2.5.3",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1",
+    "torch": "2.14.1+cu132",
+    "transformers": "5.20.2",
+    "sentence-transformers": "6.1.0",
+    "gpu": "NVIDIA GeForce RTX 4080"
+  },
+  "finished_at": "2026-11-04T01:25:04+00:00"
+}

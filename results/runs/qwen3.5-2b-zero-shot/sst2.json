@@ -1,0 +1,70 @@
+{
+  "method": "qwen3.5-2b-zero-shot",
+  "method_label": "Qwen3.5-2B, zero-shot",
+  "kind": "llm",
+  "dataset": "sst2",
+  "labels": [
+    "negative",
+    "positive"
+  ],
+  "metrics": {
+    "accuracy": 0.903243540406817,
+    "macro_f1": 0.9030007756447547,
+    "accuracy_ci95": [
+      0.8894997251236944,
+      0.9159015942825728
+    ],
+    "macro_f1_ci95": [
+      0.8892828867474206,
+      0.9158369202968468
+    ],
+    "confusion_matrix": [
+      [
+        867,
+        44
+      ],
+      [
+        132,
+        776
+      ]
+    ],
+    "n": 1819
+  },
+  "n_train": 25000,
+  "n_val": 872,
+  "n_test": 1819,
+  "train_seconds": 0.0,
+  "infer_seconds": 8.96,
+  "throughput_per_s": 202.9,
+  "peak_vram_mb": 4226.5,
+  "params": 1881825088,
+  "size_mb": 3589.3,
+  "device": "cuda",
+  "seed": 42,
+  "cpu_threads": 4,
+  "method_config": {
+    "model": "Qwen/Qwen3.5-2B",
+    "revision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+    "shots": 0,
+    "max_input_tokens": 512,
+    "batch_size": 16
+  },
+  "details": {
+    "shots": 0,
+    "prompt_tokens_mean": 63.13798790544255,
+    "prompt_tokens_max": 97,
+    "prompt_template": "<|im_start|>user\nClassify the sentiment of a movie review sentence as positive or negative. Answer with one word: negative or positive.\n\nText: {text from the test split}\nAnswer:<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+  },
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-5.15.167.4-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "numpy": "2.5.3",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1",
+    "torch": "2.14.1+cu132",
+    "transformers": "5.20.2",
+    "sentence-transformers": "6.1.0",
+    "gpu": "NVIDIA GeForce RTX 4080"
+  },
+  "finished_at": "2026-11-04T01:29:11+00:00"
+}

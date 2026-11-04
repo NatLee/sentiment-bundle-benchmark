@@ -1,0 +1,70 @@
+{
+  "method": "qwen3.5-2b-zero-shot",
+  "method_label": "Qwen3.5-2B, zero-shot",
+  "kind": "llm",
+  "dataset": "myanimelist",
+  "labels": [
+    "negative",
+    "positive"
+  ],
+  "metrics": {
+    "accuracy": 0.8058,
+    "macro_f1": 0.778583390671342,
+    "accuracy_ci95": [
+      0.7952,
+      0.816
+    ],
+    "macro_f1_ci95": [
+      0.7664078204908897,
+      0.7902229043915763
+    ],
+    "confusion_matrix": [
+      [
+        1138,
+        54
+      ],
+      [
+        917,
+        2891
+      ]
+    ],
+    "n": 5000
+  },
+  "n_train": 25000,
+  "n_val": 2000,
+  "n_test": 5000,
+  "train_seconds": 0.0,
+  "infer_seconds": 150.67,
+  "throughput_per_s": 33.2,
+  "peak_vram_mb": 5149.8,
+  "params": 1881825088,
+  "size_mb": 3589.3,
+  "device": "cuda",
+  "seed": 42,
+  "cpu_threads": 4,
+  "method_config": {
+    "model": "Qwen/Qwen3.5-2B",
+    "revision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+    "shots": 0,
+    "max_input_tokens": 512,
+    "batch_size": 16
+  },
+  "details": {
+    "shots": 0,
+    "prompt_tokens_mean": 407.6138,
+    "prompt_tokens_max": 554,
+    "prompt_template": "<|im_start|>user\nClassify the sentiment of an anime review as positive or negative. Answer with one word: negative or positive.\n\nText: {text from the test split}\nAnswer:<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+  },
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-5.15.167.4-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "numpy": "2.5.3",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1",
+    "torch": "2.14.1+cu132",
+    "transformers": "5.20.2",
+    "sentence-transformers": "6.1.0",
+    "gpu": "NVIDIA GeForce RTX 4080"
+  },
+  "finished_at": "2026-11-04T01:27:58+00:00"
+}

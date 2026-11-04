@@ -1,0 +1,196 @@
+{
+  "seed": 42,
+  "caps": {
+    "max_train": 25000,
+    "max_val": 2000,
+    "max_test": 5000
+  },
+  "datasets": {
+    "myanimelist": {
+      "source_file": "animeReviewsOrderByTime.csv",
+      "source_sha256": "28dfa1d26db0358d398aea21b8041e54505a85528d1a2cf9097725a79815ccf9",
+      "rows_read": 135203,
+      "splits": {
+        "train": {
+          "size": 25000,
+          "labels": {
+            "negative": 4461,
+            "positive": 20539
+          },
+          "ids_sha256": "c6ec09be0bbeae9407bfded3cd91ddc2161e7bf79735ca5d6f1fbc138111345d"
+        },
+        "val": {
+          "size": 2000,
+          "labels": {
+            "negative": 357,
+            "positive": 1643
+          },
+          "ids_sha256": "c076c772547193adfcd50a372562cc13a7dd80db6d06db1e0d7989d36b344d3d"
+        },
+        "test": {
+          "size": 5000,
+          "labels": {
+            "negative": 1192,
+            "positive": 3808
+          },
+          "ids_sha256": "7135d5ebc2528b346ce55dc6b98395dc044065adf34713b1030543545b82d45a"
+        }
+      }
+    },
+    "imdb": {
+      "source_file": "aclImdb.pkl",
+      "source_sha256": "c44fb11144a9121b2f35932fd683d20b24b6a7006976353921743fefe4815ffb",
+      "rows_read": 50000,
+      "splits": {
+        "train": {
+          "size": 22901,
+          "labels": {
+            "negative": 11433,
+            "positive": 11468
+          },
+          "ids_sha256": "ec812cb0d3d146ce1ee0b46612453a0d556564aa258bc3e37da9435aab75fa69"
+        },
+        "val": {
+          "size": 2000,
+          "labels": {
+            "negative": 998,
+            "positive": 1002
+          },
+          "ids_sha256": "481014f8dd00c74c17bbcf0c095b79d2a53e6fe8cbd9297b27bb68684ee0065d"
+        },
+        "test": {
+          "size": 5000,
+          "labels": {
+            "negative": 2485,
+            "positive": 2515
+          },
+          "ids_sha256": "0878a84937a0548bacdb296276b2af18ee80cd819a8009e2b896768078b1405c"
+        }
+      }
+    },
+    "sst2": {
+      "source_file": "SST2.pkl",
+      "source_sha256": "f183553f3c5d95bfeb66fbf36b2271659254ff914675041a55d61f0bc9cfba4a",
+      "rows_read": 79654,
+      "splits": {
+        "train": {
+          "size": 25000,
+          "labels": {
+            "negative": 11273,
+            "positive": 13727
+          },
+          "ids_sha256": "55c7cd63e21c19af750766a2f984514cb5a20d690f5fc3f567c9daf2c6f77a6f"
+        },
+        "val": {
+          "size": 872,
+          "labels": {
+            "negative": 428,
+            "positive": 444
+          },
+          "ids_sha256": "100e469a796856be17989ca27084fd06173a1ac563f4e15003be6346977dc259"
+        },
+        "test": {
+          "size": 1819,
+          "labels": {
+            "negative": 911,
+            "positive": 908
+          },
+          "ids_sha256": "5dbc2b5d636a163bf8c1931ad89a6126f4e8da6bd6bd6d3cf36ee3b8db2641d3"
+        }
+      }
+    },
+    "mr": {
+      "source_file": "MR.pkl",
+      "source_sha256": "00e84e4816276b3e0a47e7e4b6ccf0fec814815509b60387271f5cf4cbd01553",
+      "rows_read": 10662,
+      "splits": {
+        "train": {
+          "size": 7677,
+          "labels": {
+            "negative": 3838,
+            "positive": 3839
+          },
+          "ids_sha256": "5abfd4f99ed4cd4abc87eb14d953eb36d12b86740c7b6cf8e4ebca3a8d559865"
+        },
+        "val": {
+          "size": 853,
+          "labels": {
+            "negative": 427,
+            "positive": 426
+          },
+          "ids_sha256": "3e4f48eba693bd8c41c64f22d445875502e43f241f259e67a21a409efcfe0208"
+        },
+        "test": {
+          "size": 2132,
+          "labels": {
+            "negative": 1066,
+            "positive": 1066
+          },
+          "ids_sha256": "3699a0d2b8b69dd6a170053f4a992fffcb010267a03369b6962537fdb40c475c"
+        }
+      }
+    },
+    "subj": {
+      "source_file": "SUBJ.pkl",
+      "source_sha256": "7bf361e5b2dcf089f1b3aa181b26fee449bac11bfc4183793d48821cc9b844ab",
+      "rows_read": 10000,
+      "splits": {
+        "train": {
+          "size": 7200,
+          "labels": {
+            "subjective": 3600,
+            "objective": 3600
+          },
+          "ids_sha256": "86d3c2e53349d1c24d0bac54f17f0f2a6702da99b19097f2411e633410fb1e48"
+        },
+        "val": {
+          "size": 800,
+          "labels": {
+            "subjective": 400,
+            "objective": 400
+          },
+          "ids_sha256": "0a3b1b47c9dac92e97e2149144a833a13efe0560adefc202c4d03125c6165f92"
+        },
+        "test": {
+          "size": 2000,
+          "labels": {
+            "subjective": 1000,
+            "objective": 1000
+          },
+          "ids_sha256": "56eebb7c823e5c9a0c331b19dbac6fe99e1f36185cf40f6604c095db61235f58"
+        }
+      }
+    },
+    "mpqa": {
+      "source_file": "MPQA.pkl",
+      "source_sha256": "642d4b1a719d031873fd7ec545841aad02dc85cf397e7812615d2cc56e9fce36",
+      "rows_read": 10606,
+      "splits": {
+        "train": {
+          "size": 5863,
+          "labels": {
+            "negative": 4183,
+            "positive": 1680
+          },
+          "ids_sha256": "ef605b76d789fd336995b8171be91e7b3abfccda3bc73d7a4404268fc79ea5d1"
+        },
+        "val": {
+          "size": 651,
+          "labels": {
+            "negative": 464,
+            "positive": 187
+          },
+          "ids_sha256": "97ba814e4b056b36255ac83ff0175ae9abab2e35603aca17ade5b07512752831"
+        },
+        "test": {
+          "size": 1628,
+          "labels": {
+            "negative": 1162,
+            "positive": 466
+          },
+          "ids_sha256": "fb5f157eb87f4432ca29b88a6cd69c8703806eb26fa380d41983fc16d23d7fc4"
+        }
+      }
+    }
+  }
+}

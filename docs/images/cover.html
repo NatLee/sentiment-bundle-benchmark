@@ -1,0 +1,90 @@
+<!doctype html>
+<!-- Source of docs/images/cover.png (1280x640, the GitHub social-preview size).
+     Re-render: msedge --headless=new --disable-gpu --hide-scrollbars --window-size=1280,640
+                --screenshot=cover.png file:///.../docs/images/cover.html
+     The numbers are macro-F1 (%) from results/leaderboard.md; the review line is real `sbb predict` output. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>sentiment-bundle-benchmark cover</title>
+<style>
+  :root {
+    --surface: #fcfcfb; --plane: #f4f3ef; --ink: #0b0b0b; --ink2: #52514e; --muted: #898781;
+    --hair: #e1e0d9; --accent: #2a78d6;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1280px; height: 640px; overflow: hidden; }
+  body {
+    background: var(--surface); color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    display: grid; grid-template-columns: 560px 1fr; gap: 48px; padding: 64px 64px 56px;
+  }
+  .kicker { font-size: 17px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  h1 { font-size: 64px; line-height: 1.02; letter-spacing: -.02em; margin-top: 18px; font-weight: 750; }
+  .pitch { font-size: 25px; line-height: 1.35; color: var(--ink2); margin-top: 22px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+  .chip { font-size: 17px; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--hair); background: #fff; color: var(--ink); }
+  .chip.own { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+  .foot { margin-top: 34px; font-size: 17px; color: var(--muted); }
+  .right { display: flex; flex-direction: column; gap: 20px; padding-top: 6px; }
+  .card { background: #fff; border: 1px solid var(--hair); border-radius: 16px; padding: 20px 22px; }
+  .review { display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: center; }
+  .quote { font-size: 19px; line-height: 1.35; color: var(--ink); }
+  .who { font-size: 14px; color: var(--muted); margin-top: 6px; }
+  .verdict { text-align: right; }
+  .verdict b { display: block; font-size: 22px; color: var(--accent); }
+  .verdict span { font-size: 14px; color: var(--muted); }
+  .grid-title { font-size: 15px; color: var(--ink2); margin-bottom: 10px; }
+  table { border-collapse: separate; border-spacing: 3px; width: 100%; table-layout: fixed; }
+  col.name { width: 172px; }
+  th { font-size: 13px; font-weight: 600; color: var(--ink2); text-align: center; padding-bottom: 2px; }
+  th.row { text-align: left; font-weight: 500; color: var(--ink); white-space: nowrap; padding-right: 6px; font-size: 14px; }
+  td { height: 44px; border-radius: 5px; text-align: center; font-size: 15px; font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+  <section>
+    <div class="kicker">Sentiment benchmark · 2026</div>
+    <h1>sentiment-<br>bundle-<br>benchmark</h1>
+    <p class="pitch">Six sentiment datasets, seven modern methods, one reproducible leaderboard.</p>
+    <div class="chips">
+      <span class="chip own">MyAnimeList</span><span class="chip">IMDB</span><span class="chip">SST-2</span>
+      <span class="chip">MR</span><span class="chip">SUBJ</span><span class="chip">MPQA</span>
+    </div>
+    <p class="foot">TF-IDF · embeddings · ModernBERT · DeBERTa-v3 · local LLM — replaces GURA (2019)</p>
+  </section>
+  <section class="right">
+    <div class="card review">
+      <div>
+        <div class="quote">“The animation is gorgeous and the ending made me cry.”</div>
+        <div class="who">sbb predict · ModernBERT fine-tuned on MyAnimeList</div>
+      </div>
+      <div class="verdict"><b>positive</b><span>100.0%</span></div>
+    </div>
+    <div class="card">
+      <div class="grid-title">Macro-F1 (%) on held-out test sets · darker is better</div>
+      <table id="heat"></table>
+    </div>
+  </section>
+<script>
+  // rows: [method, MyAnimeList, IMDB, SST-2, MR, SUBJ, MPQA]
+  const rows = [
+    ["DeBERTa-v3-base",87.9,92,95.1,92.5,96.6,90.3],
+    ["ModernBERT-base",87.8,90.9,95.5,89.8,96.1,87.6],
+    ["Qwen3-Embedding + LR",87.2,89.9,93.2,89.1,94.8,88.6],
+    ["Qwen3.5-2B, 8-shot",75.2,84.4,90.8,78.8,78.7,83],
+    ["TF-IDF + LR",79.8,89.3,81.8,77.9,90.5,69.6]
+  ];
+  const cols = ["Anime", "IMDB", "SST-2", "MR", "SUBJ", "MPQA"];
+  const ramp = ["#cde2fb", "#b7d3f6", "#9ec5f4", "#86b6ef", "#6da7ec", "#5598e7", "#3987e5", "#2a78d6", "#256abf", "#1c5cab", "#184f95", "#104281"];
+  const all = rows.flatMap(r => r.slice(1));
+  const lo = Math.min(...all), hi = Math.max(...all);
+  const table = document.getElementById("heat");
+  table.innerHTML = "<colgroup><col class=\"name\">" + cols.map(() => "<col>").join("") + "</colgroup><tr><th></th>" + cols.map(c => `<th>${c}</th>`).join("") + "</tr>" + rows.map(r =>
+    `<tr><th class="row">${r[0]}</th>` + r.slice(1).map(v => {
+      const t = (v - lo) / ((hi - lo) || 1), i = Math.round(t * (ramp.length - 1));
+      return `<td style="background:${ramp[i]};color:${t > .55 ? "#fff" : "#0b0b0b"}">${v.toFixed(1)}</td>`;
+    }).join("") + "</tr>").join("");
+</script>
+</body>
+</html>

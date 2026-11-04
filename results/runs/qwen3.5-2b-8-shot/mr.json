@@ -1,0 +1,71 @@
+{
+  "method": "qwen3.5-2b-8-shot",
+  "method_label": "Qwen3.5-2B, 8-shot",
+  "kind": "llm",
+  "dataset": "mr",
+  "labels": [
+    "negative",
+    "positive"
+  ],
+  "metrics": {
+    "accuracy": 0.7945590994371482,
+    "macro_f1": 0.7880363577924925,
+    "accuracy_ci95": [
+      0.7786116322701688,
+      0.8109756097560976
+    ],
+    "macro_f1_ci95": [
+      0.772053340883388,
+      0.8049309852864305
+    ],
+    "confusion_matrix": [
+      [
+        1034,
+        32
+      ],
+      [
+        406,
+        660
+      ]
+    ],
+    "n": 2132
+  },
+  "n_train": 7677,
+  "n_val": 853,
+  "n_test": 2132,
+  "train_seconds": 0.0,
+  "infer_seconds": 40.31,
+  "throughput_per_s": 52.9,
+  "peak_vram_mb": 4108.0,
+  "params": 1881825088,
+  "size_mb": 3589.3,
+  "device": "cuda",
+  "seed": 42,
+  "cpu_threads": 4,
+  "method_config": {
+    "model": "Qwen/Qwen3.5-2B",
+    "revision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+    "shots": 8,
+    "max_demo_tokens": 96,
+    "max_input_tokens": 512,
+    "batch_size": 8
+  },
+  "details": {
+    "shots": 8,
+    "prompt_tokens_mean": 274.2598499061914,
+    "prompt_tokens_max": 308,
+    "prompt_template": "<|im_start|>user\nClassify the sentiment of a movie review snippet as positive or negative. Answer with one word: negative or positive.\n\nExamples:\n\nText: {example 1 from the training split}\nAnswer: positive\n\nText: {example 2 from the training split}\nAnswer: positive\n\nText: {example 3 from the training split}\nAnswer: negative\n\nText: {example 4 from the training split}\nAnswer: positive\n\nText: {example 5 from the training split}\nAnswer: negative\n\nText: {example 6 from the training split}\nAnswer: positive\n\nText: {example 7 from the training split}\nAnswer: negative\n\nText: {example 8 from the training split}\nAnswer: negative\n\nText: {text from the test split}\nAnswer:<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+  },
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-5.15.167.4-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "numpy": "2.5.3",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1",
+    "torch": "2.14.1+cu132",
+    "transformers": "5.20.2",
+    "sentence-transformers": "6.1.0",
+    "gpu": "NVIDIA GeForce RTX 4080"
+  },
+  "finished_at": "2026-11-04T01:44:08+00:00"
+}

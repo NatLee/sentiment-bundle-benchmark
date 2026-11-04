@@ -1,0 +1,81 @@
+{
+  "method": "qwen3-embedding-0.6b-logreg",
+  "method_label": "Qwen3-Embedding-0.6B (frozen) + LR",
+  "kind": "embedding",
+  "dataset": "mr",
+  "labels": [
+    "negative",
+    "positive"
+  ],
+  "metrics": {
+    "accuracy": 0.8911819887429644,
+    "macro_f1": 0.8911758597261972,
+    "accuracy_ci95": [
+      0.8785178236397748,
+      0.9038461538461539
+    ],
+    "macro_f1_ci95": [
+      0.878508414357395,
+      0.9038175239314484
+    ],
+    "confusion_matrix": [
+      [
+        958,
+        108
+      ],
+      [
+        124,
+        942
+      ]
+    ],
+    "n": 2132
+  },
+  "n_train": 7677,
+  "n_val": 853,
+  "n_test": 2132,
+  "train_seconds": 20.63,
+  "infer_seconds": 2.83,
+  "throughput_per_s": 754.3,
+  "peak_vram_mb": 1539.5,
+  "params": 595777537,
+  "size_mb": 1136.4,
+  "device": "cuda",
+  "seed": 42,
+  "cpu_threads": 4,
+  "method_config": {
+    "model": "Qwen/Qwen3-Embedding-0.6B",
+    "revision": "97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3",
+    "max_length": 512,
+    "batch_size": 32,
+    "prompt": "Instruct: {task}\nQuery: ",
+    "c_grid": [
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ]
+  },
+  "details": {
+    "c": 1.0,
+    "val_macro_f1_by_c": {
+      "0.1": 0.8745,
+      "1.0": 0.878,
+      "10.0": 0.8745,
+      "100.0": 0.8757
+    },
+    "embedding_dim": 1024,
+    "max_length": 512
+  },
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-5.15.167.4-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "numpy": "2.5.3",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1",
+    "torch": "2.14.1+cu132",
+    "transformers": "5.20.2",
+    "sentence-transformers": "6.1.0",
+    "gpu": "NVIDIA GeForce RTX 4080"
+  },
+  "finished_at": "2026-11-04T02:19:37+00:00"
+}
