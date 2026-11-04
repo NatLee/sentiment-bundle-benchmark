@@ -26,7 +26,7 @@ test_fraction = 0.2
 
 [sources.bundle]
 description = "NatLee/sentiment-classification-dataset-bundle on the Hugging Face Hub, Parquet revision (November 2026)"
-url = "https://huggingface.co/datasets/NatLee/sentiment-classification-dataset-bundle/resolve/REVISION_PENDING_UPLOAD/{file}"
+url = "https://huggingface.co/datasets/NatLee/sentiment-classification-dataset-bundle/resolve/b13d7491360c59208918c95d271edf89df58cb95/{file}"
 
 [sources.bundle.files]
 "myanimelist/train.parquet" = "0ac2f07d54ad855bbcb055877818b945fc1dddd738b2bd6e2da224597a821403"
